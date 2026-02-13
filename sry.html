@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love</title>
+    <!-- Importing Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-pink: #ffb7c5; /* Baby Pink */
+            --deep-pink: #ff8fa3;
+            --hot-pink: #ff4d6d;
+            --text-color: #590d22;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            color: var(--text-color);
+        }
+
+        /* Floating Hearts Background Animation */
+        .bg-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            color: rgba(255, 77, 109, 0.3);
+            animation: floatUp 10s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            20% { opacity: 0.6; }
+            100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4rem;
+            color: var(--hot-pink);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(255, 183, 197, 0.5);
+            animation: fadeInDown 1.5s ease-out;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+            animation: fadeIn 2s ease-out;
+        }
+
+        /* The Button */
+        .love-btn {
+            background-color: var(--hot-pink);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4);
+            transition: all 0.3s ease;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .love-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 77, 109, 0.6);
+            background-color: #e01e37;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- Overlay & Animations --- */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(89, 13, 34, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* --- CSS Envelope Animation --- */
+        .envelope-wrapper {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            display: none; /* Hidden by default, shown by JS */
+            z-index: 101;
+        }
+        
+        .overlay.active .envelope-wrapper.visible {
+            display: block;
+            animation: bounceIn 0.8s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            60% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #ff8fa3; /* Envelope Inside Color */
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid #ff4d6d; /* Flap Color */
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out, z-index 0.2s linear 0.2s;
+            z-index: 5;
+        }
+
+        /* Pocket creates the envelope shape */
+        .pocket {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid #ffb7c5;
+            border-right: 150px solid #ffb7c5;
+            border-top: 100px solid transparent;
+            border-bottom: 100px solid #ffb7c5;
+            z-index: 4;
+        }
+        
+        /* The decorative seal */
+        .envelope-seal {
+            position: absolute;
+            top: 110px; /* Positioned at tip of flap */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            z-index: 6;
+            transition: opacity 0.2s ease;
+        }
+
+        /* The dummy letter sliding out */
+        .letter-preview {
+            position: absolute;
+            bottom: 0;
+            left: 15px;
+            width: calc(100% - 30px);
+            height: 90%;
+            background: #fff;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            transition: transform 0.8s ease-in-out 0.4s;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            align-items: center;
+        }
+        
+        .letter-lines {
+            width: 80%;
+            height: 4px;
+            background: #eee;
+            margin-bottom: 8px;
+            border-radius: 2px;
+        }
+
+        /* Open State Classes */
+        .envelope.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+        
+        .envelope.open .envelope-seal {
+            opacity: 0;
+        }
+
+        .envelope.open .letter-preview {
+            transform: translateY(-120px);
+            z-index: 3; /* Moves slightly up in stack */
+        }
+
+        /* --- Final Letter Card --- */
+        .letter-card {
+            background: #fff0f3;
+            width: 90%;
+            max-width: 500px;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            position: relative;
+            transform: scale(0.5);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: left;
+            border: 2px solid #fff;
+            display: none; /* Hidden initially */
+        }
+
+        .letter-card.visible {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: transform 0.2s;
+        }
+        
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        .letter-content h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            color: var(--hot-pink);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .letter-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: #4a0a1d;
+        }
+
+        .highlight {
+            font-weight: 600;
+            color: var(--hot-pink);
+        }
+
+        .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2rem;
+            text-align: right;
+            margin-top: 2rem;
+            color: var(--hot-pink);
+        }
+
+        .final-seal {
+            font-size: 3rem;
+            text-align: center;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            color: var(--hot-pink);
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 3rem; }
+            .letter-card { padding: 2rem 1.5rem; }
+            .letter-content p { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Animation Container -->
+    <div class="bg-hearts" id="bg-hearts"></div>
+
+    <!-- Main Landing Section -->
+    <div class="container">
+        <div style="margin-bottom: 20px;">
+            <i data-lucide="heart" color="#ff4d6d" size="60" fill="#ff4d6d"></i>
+        </div>
+        <h1>I'm So Sorry</h1>
+        <p class="subtitle">I was wrong, and I miss you more than words can say.</p>
+        
+        <button class="love-btn" id="openBtn">
+            <i data-lucide="mail-open" size="20"></i>
+            Read My Heart
+        </button>
+    </div>
+
+    <!-- Overlay with Animation Container -->
+    <div class="overlay" id="overlay">
+        
+        <!-- The Envelope Animation -->
+        <div class="envelope-wrapper" id="envelopeWrapper">
+            <div class="envelope" id="envelope">
+                <div class="flap"></div>
+                <div class="envelope-seal">❤</div>
+                <div class="pocket"></div>
+                <div class="letter-preview">
+                    <div class="letter-lines"></div>
+                    <div class="letter-lines"></div>
+                    <div class="letter-lines" style="width: 50%"></div>
+                    <div style="margin-top: auto; font-size: 1.5rem; color: #ff4d6d;">💋</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Final Letter (Hidden initially) -->
+        <div class="letter-card" id="letterCard">
+            <button class="close-btn" id="closeBtn">
+                <i data-lucide="x" size="24"></i>
+            </button>
+            
+            <div class="final-seal">💋</div>
+
+            <div class="letter-content">
+                <h2>Mera Bacha,</h2>
+                
+                <p>
+                    Whatever happened last night, I’ve been thinking about it. You didn’t deserve that energy. No matter what we argue about, it shouldn’t feel like that. You deserve calm, respect, and to feel comfortable with mealways.
+                </p>
+                <p>
+                    <span class="highlight">I really value you</span>. Your patience, the way you listen, the way you stay steady even when things get tense — that means more to me than I probably say. I don’t want moments like that to make you feel small or unimportant.
+                </p>
+                <p>
+                   Just know this: I want you. I care about you. And I don’t ever want you questioning your place with me because of one bad night.
+                </p>
+
+                <div class="signature">
+                    Forever and Only Yours
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // DOM Elements
+        const openBtn = document.getElementById('openBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const overlay = document.getElementById('overlay');
+        const envelopeWrapper = document.getElementById('envelopeWrapper');
+        const envelope = document.getElementById('envelope');
+        const letterCard = document.getElementById('letterCard');
+
+        // Open & Animation Sequence
+        openBtn.addEventListener('click', () => {
+            // 1. Show Overlay
+            overlay.classList.add('active');
+            
+            // 2. Show Envelope
+            envelopeWrapper.classList.add('visible');
+            
+            // 3. Start Opening Animation (Small delay to let bounceIn finish)
+            setTimeout(() => {
+                envelope.classList.add('open');
+            }, 800);
+
+            // 4. Transition to Full Letter
+            // Wait for flap open (0.6s) + letter slide (0.8s) + a little pause
+            setTimeout(() => {
+                envelopeWrapper.classList.remove('visible'); // Hide envelope
+                envelopeWrapper.style.display = 'none'; // Ensure it's gone
+                
+                letterCard.classList.add('visible'); // Show actual letter
+            }, 2200);
+        });
+
+        // Close Logic
+        closeBtn.addEventListener('click', resetModal);
+        
+        // Close on background click
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                resetModal();
+            }
+        });
+
+        function resetModal() {
+            overlay.classList.remove('active');
+            
+            // Wait for fade out to reset state
+            setTimeout(() => {
+                letterCard.classList.remove('visible');
+                envelopeWrapper.style.display = ''; // Reset inline style
+                envelopeWrapper.classList.remove('visible');
+                envelope.classList.remove('open');
+            }, 500);
+        }
+
+        // Floating Hearts Logic
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = Math.random() > 0.7 ? '💋' : '❤';
+            heart.style.left = Math.random() * 100 + 'vw';
+            const size = Math.random() * 20 + 10 + 'px';
+            heart.style.fontSize = size;
+            const duration = Math.random() * 5 + 5 + 's';
+            heart.style.animationDuration = duration;
+            document.getElementById('bg-hearts').appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 10000);
+        }
+        setInterval(createHeart, 300);
+    </script>
+</body>
+</html>
